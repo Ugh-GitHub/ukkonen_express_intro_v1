@@ -6,6 +6,29 @@ function onReady() {
     console.log('hello from jquery');
     // perfrom GET request
     getRandomQuote();
+    $('#submit').on('click',submitQuote);
+}
+
+function submitQuote() {
+    console.log('clicked');
+    let quote = $('#quote').val();
+    let author = $('#author').val();
+    console.log('clicked',quote,author);
+
+    $.ajax({
+        method: 'POST',
+        url: '/submitQuote',
+        data: {
+            quote: quote, 
+            author: author}
+    }).then(function(response){
+        console.log('response', response);
+        $('#quote').val('');
+        $('#author').val('');
+    }).catch(function(error){
+        //notifying the user of an error in post request
+        alert(error);
+    })
 }
 
 function getRandomQuote(){
