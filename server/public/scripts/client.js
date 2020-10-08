@@ -5,7 +5,7 @@ $(document).ready(onReady);
 function onReady() {
     console.log('hello from jquery');
     // perfrom GET request
-    getRandomQuote();
+    getQuotes();
     $('#submit').on('click',submitQuote);
 }
 
@@ -23,6 +23,7 @@ function submitQuote() {
             author: author}
     }).then(function(response){
         console.log('response', response);
+        getQuotes();
         $('#quote').val('');
         $('#author').val('');
     }).catch(function(error){
@@ -43,12 +44,30 @@ function getRandomQuote(){
 
 }
 
-function appendToDom(quote) {
+
+function getQuotes(){
+    console.log('get the quote');
+    $.ajax({
+        method: 'GET',
+        url: '/quotes'
+    }).then(function(response){
+        console.log('response', response);
+        appendToDom(response);
+    });
+
+}
+
+function appendToDom(dataToAppend) {
+    $('#output').empty();
     // take the response from the server
     // append it to #output so it shows up on the DOM
-    console.log('in append to dom with',quote);
-    $('#output').append(`
-    <i>"${quote.quote}"</i>
-    <p> by ${quote.author}</p>
+    console.log('in append to dom with',dataToAppend);
+    for (let i = 0; i < dataToAppend.length; i++) {
+        $('#output').append(`
+    <i>"${dataToAppend[i].quote}"</i>
+    <p> by ${dataToAppend[i].author}</p>
     `);
+        
+    }
+    
 }
